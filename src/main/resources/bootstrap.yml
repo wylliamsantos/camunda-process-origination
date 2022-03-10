@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/origination?useTimezone=true&serverTimezone=UTC&nullNamePatternMatchesALl=true
+    username: origination
+    password: origination
+    hikari:
+      connectionTimeout: 30000
+      idleTimeout: 60000
+      maxLifetime: 120000
+      maximumPoolSize: 5
+      minimumIdle: 1
+  flyway:
+    url: jdbc:mysql://localhost:3306/
+    schemas: origination
+    user: root
+    password: admin123
+camunda:
+  bpm:
+    enabled: true
+    filter:
+      create: all
+    id-generator: strong
+    history-level: NONE
+    database:
+      type: mysql
+    default-serialization-format: application/json
+
+process:
+  origination-process: origination-process
+  businesskey-origination-prefix: document_
+
+client:
+  client:
+    url: http://localhost:8100/v1/client

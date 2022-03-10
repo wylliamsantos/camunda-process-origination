@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_01bod85" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="origination-process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1240m7g</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1240m7g" sourceRef="StartEvent_1" targetRef="Activity_1qrc4hx" />
+    <bpmn:serviceTask id="Activity_1qrc4hx" name="Save client&#39;s register" camunda:asyncAfter="true" camunda:delegateExpression="${saveClientRegisterDelegate}">
+      <bpmn:incoming>Flow_1240m7g</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wnxdo2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_1jo1gdw">
+      <bpmn:incoming>Flow_0g4qw6m</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0wnxdo2" sourceRef="Activity_1qrc4hx" targetRef="Activity_1rn14uo" />
+    <bpmn:exclusiveGateway id="Gateway_10xj16l">
+      <bpmn:incoming>Flow_1gdn130</bpmn:incoming>
+      <bpmn:outgoing>Flow_1594lbd</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1kl3xlh</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1594lbd" name="ELEGIBLE&#10;&#10;" sourceRef="Gateway_10xj16l" targetRef="Activity_1doc3vt">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${elegibility == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1kl3xlh" name="INELIGIBLE" sourceRef="Gateway_10xj16l" targetRef="Activity_1odknyb">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${elegibility == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="Activity_1odknyb" name="Check Unelegible Client #{execution.processBusinessKey}" camunda:asyncAfter="true">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="resultElegibility" label="Result Elegibility" type="string" defaultValue="TRY_AGAIN" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1kl3xlh</bpmn:incoming>
+    </bpmn:userTask>
+    <bpmn:task id="Activity_1doc3vt" name="Loan Contract" camunda:asyncBefore="true" camunda:asyncAfter="true">
+      <bpmn:incoming>Flow_1594lbd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0g4qw6m</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0g4qw6m" sourceRef="Activity_1doc3vt" targetRef="Event_1jo1gdw" />
+    <bpmn:sequenceFlow id="Flow_1gdn130" sourceRef="Activity_1rn14uo" targetRef="Gateway_10xj16l" />
+    <bpmn:serviceTask id="Activity_1rn14uo" name="Verify Elegibiity" camunda:asyncAfter="true" camunda:delegateExpression="${verifyElegibilityDelegate}">
+      <bpmn:incoming>Flow_0wnxdo2</bpmn:incoming>
+      <bpmn:outgoing>Flow_1gdn130</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="origination-process">
+      <bpmndi:BPMNEdge id="Flow_1240m7g_di" bpmnElement="Flow_1240m7g">
+        <di:waypoint x="215" y="280" />
+        <di:waypoint x="320" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wnxdo2_di" bpmnElement="Flow_0wnxdo2">
+        <di:waypoint x="420" y="280" />
+        <di:waypoint x="500" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1594lbd_di" bpmnElement="Flow_1594lbd">
+        <di:waypoint x="715" y="280" />
+        <di:waypoint x="860" y="280" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="734" y="260" width="54" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kl3xlh_di" bpmnElement="Flow_1kl3xlh">
+        <di:waypoint x="690" y="255" />
+        <di:waypoint x="690" y="160" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="700" y="193" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g4qw6m_di" bpmnElement="Flow_0g4qw6m">
+        <di:waypoint x="960" y="280" />
+        <di:waypoint x="1082" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gdn130_di" bpmnElement="Flow_1gdn130">
+        <di:waypoint x="600" y="280" />
+        <di:waypoint x="665" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0b68lph_di" bpmnElement="Activity_1qrc4hx">
+        <dc:Bounds x="320" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1hztg0p_di" bpmnElement="Activity_1odknyb">
+        <dc:Bounds x="640" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_10xj16l_di" bpmnElement="Gateway_10xj16l" isMarkerVisible="true">
+        <dc:Bounds x="665" y="255" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1jo1gdw_di" bpmnElement="Event_1jo1gdw">
+        <dc:Bounds x="1082" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1doc3vt_di" bpmnElement="Activity_1doc3vt">
+        <dc:Bounds x="860" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zuqy1r_di" bpmnElement="Activity_1rn14uo">
+        <dc:Bounds x="500" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

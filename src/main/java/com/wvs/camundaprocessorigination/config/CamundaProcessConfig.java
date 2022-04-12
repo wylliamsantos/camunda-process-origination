@@ -42,11 +42,11 @@ public class CamundaProcessConfig {
     }
 
     private ProcessDefinition searchProcess(String processDefinitionId) {
-        this.repositoryService.createProcessDefinitionQuery()
+        List<ProcessDefinition> processes = this.repositoryService.createProcessDefinitionQuery()
                 .processDefinitionKey(processDefinitionId)
                 .orderByProcessDefinitionVersion()
                 .desc()
-                .list()
+                .list();
 
         if (CollectionUtils.isEmpty(processes)) {
             log.info("Process definition not found -> {}", processDefinitionId);
